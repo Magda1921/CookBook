@@ -34,16 +34,17 @@ public class Main {
         boolean success = newFile.createNewFile();
 
         String introduction = "My cookbook";
-        BufferedWriter writer = new BufferedWriter(new FileWriter("cookbook.txt"));
-        writer.write(introduction);
 
-        writer.close();
+
+
 
         String stringRepresentation = recipes.toString();
-        BufferedWriter writer2 = new BufferedWriter(new FileWriter("cookbook.txt"));
-        writer2.write(stringRepresentation);
+        BufferedWriter writer = new BufferedWriter(new FileWriter("cookbook.txt"));
+        writer.write(introduction);
+        writer.newLine();
+        writer.write(stringRepresentation);
 
-        writer2.close();
+        writer.close();
 
     }
     private static void showRecipes(List<Recipe> recipes) {
