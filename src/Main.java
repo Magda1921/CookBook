@@ -1,9 +1,13 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         List<Recipe> recipes = new ArrayList<>();
         int number = -1;
         Scanner scanner = new Scanner(System.in);
@@ -26,6 +30,21 @@ public class Main {
                 showRecipes(recipes);
             }
         }
+        File newFile = new File("cookbook.txt");
+        boolean success = newFile.createNewFile();
+
+        String introduction = "My cookbook";
+        BufferedWriter writer = new BufferedWriter(new FileWriter("cookbook.txt"));
+        writer.write(introduction);
+
+        writer.close();
+
+        String stringRepresentation = recipes.toString();
+        BufferedWriter writer2 = new BufferedWriter(new FileWriter("cookbook.txt"));
+        writer2.write(stringRepresentation);
+
+        writer2.close();
+
     }
     private static void showRecipes(List<Recipe> recipes) {
         System.out.println(recipes);
@@ -54,5 +73,10 @@ public class Main {
         recipe.setIngredients(ingredients);
 
         recipes.add(recipe);
+
+
+
+
     }
-}
+
+    }
