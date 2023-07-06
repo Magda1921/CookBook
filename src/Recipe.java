@@ -4,16 +4,9 @@ public class Recipe {
     private int id;
     private String name;
     private String description;
-    List<String> ingredients;
+    List<Ingredient> ingredients;
 
     public Recipe() {
-    }
-
-    public Recipe(int id, String name, String description, List<String> ingredients) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.ingredients = ingredients;
     }
 
     public int getId() {
@@ -40,11 +33,11 @@ public class Recipe {
         this.description = description;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
