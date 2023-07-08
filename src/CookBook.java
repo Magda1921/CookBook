@@ -15,7 +15,6 @@ public class CookBook {
 
         Path pathCookbook = Paths.get("cookbook.txt");
         if (Files.exists(pathCookbook)) {
-            System.out.println("file exists");
             List<Recipe> recipes = readRecipes();
             id = recipes.size();
         } else {
@@ -23,7 +22,6 @@ public class CookBook {
             boolean success = newFile.createNewFile();
             id = 0;
         }
-
 
         int number = -1;
         Scanner scanner = new Scanner(System.in);
@@ -63,13 +61,7 @@ public class CookBook {
     }
 
     private void removeRecipe() {
-        File file = new File("cookbook.txt");
-        boolean fileDeleted = file.delete();
-        if (fileDeleted) {
-            System.out.println("File deleted successfully");
-        } else {
-            System.out.println("File not deleted successfully");
-        }
+    
     }
 
     private List<Recipe> readRecipes() {
@@ -83,15 +75,18 @@ public class CookBook {
 
             while (currentLine != null) {
                 String[] partsRecipe = currentLine.split(";");
-
-                String idRecipe = partsRecipe[0];
+                int recipeIdPosition = 0;
+                int recipeNamePosition = 1;
+                int recipeDescriptionPosition = 2;
+                int recipeIngredientsPosition =3;
+                String idRecipe = partsRecipe[recipeIdPosition];
                 int id = Integer.parseInt(idRecipe);
 
-                String nameRecipe = partsRecipe[1];
+                String nameRecipe = partsRecipe[recipeNamePosition];
 
-                String descriptionRecipe = partsRecipe[2];
+                String descriptionRecipe = partsRecipe[recipeDescriptionPosition];
 
-                String ingredientsRecipe = partsRecipe[3];
+                String ingredientsRecipe = partsRecipe[recipeIngredientsPosition];
                 String[] partsIngredients = ingredientsRecipe.split(",");
 
                 List<Ingredient> ingredients = new ArrayList<>();
