@@ -1,14 +1,12 @@
+package cookbook.model;
+
 public class Ingredient {
     private int id;
     private String name;
     private double quantity;
     private String unit;
 
-    public Ingredient(int id, String name, double quantity, String unit) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.unit = unit;
+    public Ingredient() {
     }
 
     public int getId() {
@@ -41,5 +39,15 @@ public class Ingredient {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", unit='" + unit + '\'' +
+                '}';
     }
 }
