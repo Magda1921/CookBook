@@ -1,3 +1,7 @@
+package cookbook;
+
+import cookbook.CookBook;
+
 import java.io.IOException;
 
 public class Main {
