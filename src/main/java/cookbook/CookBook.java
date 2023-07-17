@@ -13,12 +13,13 @@ import java.util.Scanner;
 
 public class CookBook {
 
-    static int id;
+    public int id;
+    private RecipeMapper recipeMapper = new RecipeMapper();
 
-
+    private FileOperations fileOperations = new FileOperations();
     public void start() throws IOException {
 
-        crateFile();
+        fileOperations.crateFile();
 
         int number = -1;
         Scanner scanner = new Scanner(System.in);
@@ -50,35 +51,11 @@ public class CookBook {
         }
     }
 
-    public void crateFile() throws IOException {
-
-        Path pathCookbook = Paths.get("cookbook.txt");
-        if (Files.exists(pathCookbook)) {
-            List<Recipe> recipes = readRecipes();
-            id = recipes.get(recipes.size() - 1).getId() + 1;
-        } else {
-            File newFile = new File("cookbook.txt");
-            boolean success = newFile.createNewFile();
-            id = 0;
-        }
-    }
-
     private void showRecipes() {
 
         List<Recipe> recipes = readRecipes();
 
         System.out.println(recipes);
-    }
-
-    private void removeFile() {
-        try {
-            File file = new File("cookbook.txt");
-            if (file.delete()) {
-                System.out.println(file.getName() + "deleted");
-            } else System.out.println("failed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void removeRecipe() throws IOException {
@@ -96,16 +73,16 @@ public class CookBook {
                 recipes.remove(removedRecipe);
                 break;
             }
-            removeFile();
+            fileOperations.removeFile();
             for (Recipe recipe : recipes) {
-                saveRecipeStringToFile(changeRecipeToString(recipe));
+                saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
             }
 
         }
         System.out.println(recipes);
     }
 
-    private List<Recipe> readRecipes() {
+    public List<Recipe> readRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         String file = "cookbook.txt";
         BufferedReader reader;
@@ -115,48 +92,15 @@ public class CookBook {
             String currentLine = reader.readLine();
 
             while (currentLine != null) {
-                String[] partsRecipe = currentLine.split(";");
-                int recipeIdPosition = 0;
-                int recipeNamePosition = 1;
-                int recipeDescriptionPosition = 2;
-                int recipeIngredientsPosition = 3;
-                String idRecipe = partsRecipe[recipeIdPosition];
-                int id = Integer.parseInt(idRecipe);
-
-                String nameRecipe = partsRecipe[recipeNamePosition];
-
-                String descriptionRecipe = partsRecipe[recipeDescriptionPosition];
-
-                String ingredientsRecipe = partsRecipe[recipeIngredientsPosition];
-                String[] partsIngredients = ingredientsRecipe.split(",");
-
-                int ingredientIdPosition = 0;
-                int ingredientNamePosition = 1;
-                int ingredientQuantityPosition = 2;
-                int ingredientUnitPosition = 3;
-                List<Ingredient> ingredients = new ArrayList<>();
-                for (String ingredientString : partsIngredients) {
-                    String[] ingredientPart = ingredientString.split("-");
-                    Ingredient ingredient = new Ingredient();
-                    ingredient.setId(Integer.parseInt(ingredientPart[ingredientIdPosition]));
-                    ingredient.setName(ingredientPart[ingredientNamePosition]);
-                    ingredient.setQuantity(Double.parseDouble(ingredientPart[ingredientQuantityPosition]));
-                    ingredient.setUnit(ingredientPart[ingredientUnitPosition]);
-                    ingredients.add(ingredient);
-                }
-
                 Recipe recipe = new Recipe();
-                recipe.setId(id);
-                recipe.setName(nameRecipe);
-                recipe.setDescription(descriptionRecipe);
-                recipe.setIngredients(ingredients);
+                recipe = recipeMapper.changeStringToRecipe(currentLine);
                 currentLine = reader.readLine();
                 recipes.add(recipe);
             }
             reader.close();
 
         } catch (IOException e) {
-            System.out.println("There is problem with file read. Contact IT");
+            System.out.println("There is a problem with file read. Contact IT");
             return null;
         }
         return recipes;
@@ -198,17 +142,6 @@ public class CookBook {
         return ingredients;
     }
 
-    public String changeRecipeToString(Recipe recipe) {
-
-        String ingredientsString = "";
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            String ingredientString = ingredient.getId() + "-" + ingredient.getName() + "-" + ingredient.getQuantity() + "-" + ingredient.getUnit();
-            ingredientsString += ingredientString + ",";
-        }
-        ingredientsString = ingredientsString.substring(0, ingredientsString.length() - 1);
-
-        return recipe.getId() + ";" + recipe.getName() + ";" + recipe.getDescription() + ";" + ingredientsString;
-    }
 
     public void saveRecipeStringToFile(String recipeString) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("cookbook.txt", true));
@@ -237,7 +170,7 @@ public class CookBook {
         recipe.setDescription(description);
         recipe.setIngredients(ingredients);
 
-        saveRecipeStringToFile(changeRecipeToString(recipe));
+        saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
 
     }
 
@@ -285,10 +218,10 @@ public class CookBook {
 
         List<Ingredient> ingredients = addNewIngredient();
         recipes.get(changedRecipe).setIngredients(ingredients);
-        removeFile();
+        fileOperations.removeFile();
 
         for (Recipe recipe : recipes) {
-            saveRecipeStringToFile(changeRecipeToString(recipe));
+            saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
         }
     }
 }
