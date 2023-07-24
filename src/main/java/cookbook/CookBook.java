@@ -3,23 +3,24 @@ package cookbook;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CookBook {
 
-    public int id;
+    private String fileName = "cookbook.txt";
+    private int id;
     private RecipeMapper recipeMapper = new RecipeMapper();
-
     private FileOperations fileOperations = new FileOperations();
+
     public void start() throws IOException {
 
-        fileOperations.crateFile();
+        id = getCurrentId(fileOperations.readRecipes(fileName));
+        fileOperations.createFile();
 
         int number = -1;
         Scanner scanner = new Scanner(System.in);
@@ -51,15 +52,26 @@ public class CookBook {
         }
     }
 
+    public int getCurrentId(List <Recipe> recipes) {
+
+        Recipe recipe = new Recipe();
+        if (null == recipes) {
+            id = 0;
+        } else {
+                recipe = recipes.get(recipes.size()-1);
+                id = recipe.getId();}
+        return id;
+    }
+
     private void showRecipes() {
 
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
 
         System.out.println(recipes);
     }
 
     private void removeRecipe() throws IOException {
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
         int removedRecipe = 0;
         System.out.println("Enter the name of the recipe that you want to remove");
         Scanner scanner = new Scanner(System.in);
@@ -80,30 +92,6 @@ public class CookBook {
 
         }
         System.out.println(recipes);
-    }
-
-    public List<Recipe> readRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        String file = "cookbook.txt";
-        BufferedReader reader;
-
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String currentLine = reader.readLine();
-
-            while (currentLine != null) {
-                Recipe recipe = new Recipe();
-                recipe = recipeMapper.changeStringToRecipe(currentLine);
-                currentLine = reader.readLine();
-                recipes.add(recipe);
-            }
-            reader.close();
-
-        } catch (IOException e) {
-            System.out.println("There is a problem with file read. Contact IT");
-            return null;
-        }
-        return recipes;
     }
 
     public List<Ingredient> addNewIngredient() {
@@ -179,7 +167,7 @@ public class CookBook {
         String wantedRecipeName;
         wantedRecipeName = scanner.nextLine();
         String nameofRecipe = "";
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
         for (int i = 0; i < recipes.size(); i++) {
             nameofRecipe = recipes.get(i).getName();
             if (nameofRecipe.equals(wantedRecipeName)) {
@@ -191,7 +179,7 @@ public class CookBook {
     }
 
     public void editByName() throws IOException {
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the recipe you want to update: ");

@@ -3,6 +3,7 @@ package cookbook.model;
 import cookbook.model.Ingredient;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Recipe {
 
@@ -56,5 +57,27 @@ public class Recipe {
                     ", ingredients=" + ingredients +
                     '}';
         }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Recipe recipe = (Recipe) o;
+
+        if (id != recipe.id) return false;
+        if (!Objects.equals(name, recipe.name)) return false;
+        if (!Objects.equals(description, recipe.description)) return false;
+        return Objects.equals(ingredients, recipe.ingredients);
     }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (ingredients != null ? ingredients.hashCode() : 0);
+        return result;
+    }
+}
 

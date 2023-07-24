@@ -4,13 +4,11 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class RecipeMapperTest {
-    RecipeMapper recipeMapper = new RecipeMapper();
     @Test
     void shouldChangeRecipeToString() {
         Recipe recipe = new Recipe();
@@ -32,19 +30,19 @@ class RecipeMapperTest {
         ingredients.add(ingredient2);
         recipe.setIngredients(ingredients);
 
-        String mapped = recipeMapper.changeRecipeToString(recipe);
+        String mapped = RecipeMapper.changeRecipeToString(recipe);
         String expected = "1;pesto;Place the basil leaves, garlic and olive oil into the bowl of a food processor and pulse several times.;1-basil-1.0-piece,2-garlic-4.0-cloves";
         Assertions.assertEquals(expected, mapped);
     }
     @Test
     void shouldChangeStringToRecipe() {
-        String recipeString = "1;pesto;Place the basil leaves, garlic and olive oil into the bowl of a food processor and pulse several times.;1-basil-1.0-piece,2-garlic-4.0-cloves";
+        String recipeString = "1;pesto;description;1-basil-1.0-piece,2-garlic-4.0-cloves";
 
-        Recipe mapped = recipeMapper.changeStringToRecipe(recipeString);
+        Recipe mapped = RecipeMapper.changeStringToRecipe(recipeString);
         Recipe recipe = new Recipe();
         recipe.setId(1);
         recipe.setName("pesto");
-        recipe.setDescription("Place the basil leaves, garlic and olive oil into the bowl of a food processor and pulse several times.");
+        recipe.setDescription("description");
         List <Ingredient> ingredients = new ArrayList<>();
         Ingredient ingredient1 = new Ingredient();
         ingredient1.setId(1);
@@ -59,6 +57,7 @@ class RecipeMapperTest {
         ingredients.add(ingredient1);
         ingredients.add(ingredient2);
         recipe.setIngredients(ingredients);
+
 
         Assertions.assertEquals(recipe, mapped);
     }

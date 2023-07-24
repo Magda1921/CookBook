@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeMapper {
-    public String changeRecipeToString(Recipe recipe) {
+    public static String changeRecipeToString(Recipe recipe) {
 
         String ingredientsString = "";
         for (Ingredient ingredient : recipe.getIngredients()) {
@@ -19,7 +19,7 @@ public class RecipeMapper {
         return recipe.getId() + ";" + recipe.getName() + ";" + recipe.getDescription() + ";" + ingredientsString;
     }
 
-    public Recipe changeStringToRecipe (String recipeString) {
+    public static Recipe changeStringToRecipe (String recipeString) {
 
         String[] partsRecipe = recipeString.split(";");
         int recipeIdPosition = 0;
