@@ -1,0 +1,5 @@
+cookbook\model\Recipe.class
+cookbook\Main.class
+cookbook\CookBook.class
+cookbook\RecipeMapper.class
+cookbook\model\Ingredient.class
