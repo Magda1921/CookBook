@@ -55,7 +55,7 @@ public class CookBook {
     public int getCurrentId(List <Recipe> recipes) {
 
         Recipe recipe = new Recipe();
-        if (null == recipes) {
+        if (recipes == null || recipes.isEmpty()) {
             id = 0;
         } else {
                 recipe = recipes.get(recipes.size()-1);
