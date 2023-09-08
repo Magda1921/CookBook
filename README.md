@@ -6,5 +6,5 @@ User interface is in the console.
 
 To run this project 
 Install Java 17 and run in console:
-javac -d out CookBook.java Main.java FileOperations.java RecipeMapper.java model/Ingredient.java model/Recipe.java
+javac -d out CookBook.java Main.java FileOperations.java RecipeMapper.java model/Ingredient.java model/Recipe.java Properties.java
 java -cp out cookbook.Main
