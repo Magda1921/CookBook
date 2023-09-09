@@ -1,4 +1,4 @@
-Cookbook - recipe storage application
+# Cookbook - recipe storage application
 Simple recipe storage application created in order to learn programming.
 Application has been created in Java 17.
 Application allows users to save recipes in a text file and modify it. 
