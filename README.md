@@ -4,7 +4,7 @@ Application has been created in Java 17.
 Application allows users to save recipes in a text file and modify it. 
 User interface is in the console.
 
-To run this project 
+## To run this project 
 Install Java 17 and run in console:
-javac -d out CookBook.java Main.java FileOperations.java RecipeMapper.java model/Ingredient.java model/Recipe.java Properties.java
-java -cp out cookbook.Main
+1. javac -d out CookBook.java Main.java FileOperations.java RecipeMapper.java model/Ingredient.java model/Recipe.java Properties.java
+1. java -cp out cookbook.Main
