@@ -1,6 +1,4 @@
-package cookbook.model;
-
-import cookbook.model.Ingredient;
+package cookbook.Models;
 
 import java.util.List;
 import java.util.Objects;

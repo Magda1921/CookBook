@@ -1,6 +1,6 @@
 package cookbook;
 
-import cookbook.model.Recipe;
+import cookbook.Models.Recipe;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,22 +12,24 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import static cookbook.CookBook.fileName;
 import static cookbook.RecipeMapper.changeStringToRecipe;
 
 public class FileOperations {
     public void createFile() throws IOException {
 
-        Path pathCookbook = Paths.get("cookbook.txt");
+        Path pathCookbook = Paths.get(fileName);
         if (Files.exists(pathCookbook)) {
         } else {
-            File newFile = new File("cookbook.txt");
+            File newFile = new File(fileName);
             newFile.createNewFile();
         }
     }
 
     public void removeFile() {
+        File file = new File(fileName);
         try {
-            File file = new File("cookbook.txt");
             if (file.delete()) {
                 System.out.println(file.getName() + "deleted");
             } else System.out.println("failed");
@@ -36,17 +38,16 @@ public class FileOperations {
         }
     }
 
-    public List<Recipe> readRecipes(String fileName) {
+    public List<Recipe> readRecipes(String filename1) {
         List<Recipe> recipes = new ArrayList<>();
         BufferedReader reader;
 
         try {
-            reader = new BufferedReader(new FileReader(fileName));
+            reader = new BufferedReader(new FileReader(filename1));
             String currentLine = reader.readLine();
 
             while (currentLine != null) {
-                Recipe recipe = new Recipe();
-                recipe = changeStringToRecipe(currentLine);
+                Recipe recipe = changeStringToRecipe(currentLine);
                 currentLine = reader.readLine();
                 recipes.add(recipe);
             }

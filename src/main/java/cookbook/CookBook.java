@@ -1,18 +1,19 @@
 package cookbook;
 
-import cookbook.model.Ingredient;
-import cookbook.model.Recipe;
+import cookbook.Models.Ingredient;
+import cookbook.Models.Recipe;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class CookBook {
 
-    private String fileName = "cookbook.txt";
+    public static String fileName = "cookbook.txt";
     private int id;
     private RecipeMapper recipeMapper = new RecipeMapper();
     private FileOperations fileOperations = new FileOperations();
@@ -52,14 +53,14 @@ public class CookBook {
         }
     }
 
-    public int getCurrentId(List <Recipe> recipes) {
-
-        Recipe recipe = new Recipe();
+    public int getCurrentId(List<Recipe> recipes) {
         if (recipes == null || recipes.isEmpty()) {
             id = 0;
         } else {
-                recipe = recipes.get(recipes.size()-1);
-                id = recipe.getId();}
+            Recipe recipeMaxId = recipes.stream()
+                    .max(Comparator.comparing(Recipe::getId)).get();
+            id = recipeMaxId.getId();
+        }
         return id;
     }
 
@@ -71,13 +72,13 @@ public class CookBook {
     }
 
     private void removeRecipe() throws IOException {
-        List<Recipe> recipes = fileOperations.readRecipes(fileName);
-        int removedRecipe = 0;
         System.out.println("Enter the name of the recipe that you want to remove");
         Scanner scanner = new Scanner(System.in);
         String wantedRecipeName;
         wantedRecipeName = scanner.nextLine();
         String nameofRecipe = "";
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
+        int removedRecipe = 0;
         for (int i = 0; i < recipes.size(); i++) {
             nameofRecipe = recipes.get(i).getName();
             if (nameofRecipe.equals(wantedRecipeName)) {
@@ -89,7 +90,6 @@ public class CookBook {
             for (Recipe recipe : recipes) {
                 saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
             }
-
         }
         System.out.println(recipes);
     }
