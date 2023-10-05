@@ -1,6 +1,6 @@
 package cookbook;
 
-import cookbook.Models.Recipe;
+import cookbook.model.Recipe;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,12 +38,12 @@ public class FileOperations {
         }
     }
 
-    public List<Recipe> readRecipes(String filename1) {
+    public List<Recipe> readRecipes(String filename) {
         List<Recipe> recipes = new ArrayList<>();
         BufferedReader reader;
 
         try {
-            reader = new BufferedReader(new FileReader(filename1));
+            reader = new BufferedReader(new FileReader(filename));
             String currentLine = reader.readLine();
 
             while (currentLine != null) {

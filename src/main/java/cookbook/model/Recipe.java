@@ -1,4 +1,4 @@
-package cookbook.Models;
+package cookbook.model;
 
 import java.util.List;
 import java.util.Objects;

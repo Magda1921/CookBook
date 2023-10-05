@@ -1,7 +1,7 @@
 package cookbook;
 
-import cookbook.Models.Ingredient;
-import cookbook.Models.Recipe;
+import cookbook.model.Ingredient;
+import cookbook.model.Recipe;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -91,7 +91,7 @@ public class CookBook {
                 saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
             }
         }
-        System.out.println(recipes);
+        System.out.println("Recipe "+ wantedRecipeName +  " successfully removed.");
     }
 
     public List<Ingredient> addNewIngredient() {

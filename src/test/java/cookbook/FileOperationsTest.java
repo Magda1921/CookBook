@@ -1,7 +1,7 @@
 package cookbook;
 
-import cookbook.Models.Ingredient;
-import cookbook.Models.Recipe;
+import cookbook.model.Ingredient;
+import cookbook.model.Recipe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
