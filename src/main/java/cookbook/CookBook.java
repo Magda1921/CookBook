@@ -3,22 +3,25 @@ package cookbook;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class CookBook {
 
-    static int id;
-
+    public static String fileName = "cookbook.txt";
+    private int id;
+    private RecipeMapper recipeMapper = new RecipeMapper();
+    private FileOperations fileOperations = new FileOperations();
 
     public void start() throws IOException {
 
-        crateFile();
+        id = getCurrentId(fileOperations.readRecipes(fileName));
+        fileOperations.createFile();
 
         int number = -1;
         Scanner scanner = new Scanner(System.in);
@@ -50,45 +53,32 @@ public class CookBook {
         }
     }
 
-    public void crateFile() throws IOException {
-
-        Path pathCookbook = Paths.get("cookbook.txt");
-        if (Files.exists(pathCookbook)) {
-            List<Recipe> recipes = readRecipes();
-            id = recipes.get(recipes.size() - 1).getId() + 1;
-        } else {
-            File newFile = new File("cookbook.txt");
-            boolean success = newFile.createNewFile();
+    public int getCurrentId(List<Recipe> recipes) {
+        if (recipes == null || recipes.isEmpty()) {
             id = 0;
+        } else {
+            Recipe recipeMaxId = recipes.stream()
+                    .max(Comparator.comparing(Recipe::getId)).get();
+            id = recipeMaxId.getId();
         }
+        return id;
     }
 
     private void showRecipes() {
 
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
 
         System.out.println(recipes);
     }
 
-    private void removeFile() {
-        try {
-            File file = new File("cookbook.txt");
-            if (file.delete()) {
-                System.out.println(file.getName() + "deleted");
-            } else System.out.println("failed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void removeRecipe() throws IOException {
-        List<Recipe> recipes = readRecipes();
-        int removedRecipe = 0;
         System.out.println("Enter the name of the recipe that you want to remove");
         Scanner scanner = new Scanner(System.in);
         String wantedRecipeName;
         wantedRecipeName = scanner.nextLine();
         String nameofRecipe = "";
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
+        int removedRecipe = 0;
         for (int i = 0; i < recipes.size(); i++) {
             nameofRecipe = recipes.get(i).getName();
             if (nameofRecipe.equals(wantedRecipeName)) {
@@ -96,70 +86,12 @@ public class CookBook {
                 recipes.remove(removedRecipe);
                 break;
             }
-            removeFile();
+            fileOperations.removeFile();
             for (Recipe recipe : recipes) {
-                saveRecipeStringToFile(changeRecipeToString(recipe));
+                saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
             }
-
         }
-        System.out.println(recipes);
-    }
-
-    private List<Recipe> readRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        String file = "cookbook.txt";
-        BufferedReader reader;
-
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String currentLine = reader.readLine();
-
-            while (currentLine != null) {
-                String[] partsRecipe = currentLine.split(";");
-                int recipeIdPosition = 0;
-                int recipeNamePosition = 1;
-                int recipeDescriptionPosition = 2;
-                int recipeIngredientsPosition = 3;
-                String idRecipe = partsRecipe[recipeIdPosition];
-                int id = Integer.parseInt(idRecipe);
-
-                String nameRecipe = partsRecipe[recipeNamePosition];
-
-                String descriptionRecipe = partsRecipe[recipeDescriptionPosition];
-
-                String ingredientsRecipe = partsRecipe[recipeIngredientsPosition];
-                String[] partsIngredients = ingredientsRecipe.split(",");
-
-                int ingredientIdPosition = 0;
-                int ingredientNamePosition = 1;
-                int ingredientQuantityPosition = 2;
-                int ingredientUnitPosition = 3;
-                List<Ingredient> ingredients = new ArrayList<>();
-                for (String ingredientString : partsIngredients) {
-                    String[] ingredientPart = ingredientString.split("-");
-                    Ingredient ingredient = new Ingredient();
-                    ingredient.setId(Integer.parseInt(ingredientPart[ingredientIdPosition]));
-                    ingredient.setName(ingredientPart[ingredientNamePosition]);
-                    ingredient.setQuantity(Double.parseDouble(ingredientPart[ingredientQuantityPosition]));
-                    ingredient.setUnit(ingredientPart[ingredientUnitPosition]);
-                    ingredients.add(ingredient);
-                }
-
-                Recipe recipe = new Recipe();
-                recipe.setId(id);
-                recipe.setName(nameRecipe);
-                recipe.setDescription(descriptionRecipe);
-                recipe.setIngredients(ingredients);
-                currentLine = reader.readLine();
-                recipes.add(recipe);
-            }
-            reader.close();
-
-        } catch (IOException e) {
-            System.out.println("There is problem with file read. Contact IT");
-            return null;
-        }
-        return recipes;
+        System.out.println("Recipe "+ wantedRecipeName +  " successfully removed.");
     }
 
     public List<Ingredient> addNewIngredient() {
@@ -198,17 +130,6 @@ public class CookBook {
         return ingredients;
     }
 
-    public String changeRecipeToString(Recipe recipe) {
-
-        String ingredientsString = "";
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            String ingredientString = ingredient.getId() + "-" + ingredient.getName() + "-" + ingredient.getQuantity() + "-" + ingredient.getUnit();
-            ingredientsString += ingredientString + ",";
-        }
-        ingredientsString = ingredientsString.substring(0, ingredientsString.length() - 1);
-
-        return recipe.getId() + ";" + recipe.getName() + ";" + recipe.getDescription() + ";" + ingredientsString;
-    }
 
     public void saveRecipeStringToFile(String recipeString) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("cookbook.txt", true));
@@ -237,7 +158,7 @@ public class CookBook {
         recipe.setDescription(description);
         recipe.setIngredients(ingredients);
 
-        saveRecipeStringToFile(changeRecipeToString(recipe));
+        saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
 
     }
 
@@ -246,7 +167,7 @@ public class CookBook {
         String wantedRecipeName;
         wantedRecipeName = scanner.nextLine();
         String nameofRecipe = "";
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
         for (int i = 0; i < recipes.size(); i++) {
             nameofRecipe = recipes.get(i).getName();
             if (nameofRecipe.equals(wantedRecipeName)) {
@@ -258,7 +179,7 @@ public class CookBook {
     }
 
     public void editByName() throws IOException {
-        List<Recipe> recipes = readRecipes();
+        List<Recipe> recipes = fileOperations.readRecipes(fileName);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the recipe you want to update: ");
@@ -285,10 +206,10 @@ public class CookBook {
 
         List<Ingredient> ingredients = addNewIngredient();
         recipes.get(changedRecipe).setIngredients(ingredients);
-        removeFile();
+        fileOperations.removeFile();
 
         for (Recipe recipe : recipes) {
-            saveRecipeStringToFile(changeRecipeToString(recipe));
+            saveRecipeStringToFile(recipeMapper.changeRecipeToString(recipe));
         }
     }
 }
